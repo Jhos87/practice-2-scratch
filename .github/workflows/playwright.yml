@@ -5,7 +5,7 @@ on:
 jobs:
   test:
     timeout-minutes: 60
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     steps:
     - uses: actions/checkout@v4
     - uses: actions/setup-node@v4
@@ -17,6 +17,23 @@ jobs:
       run: npx playwright install --with-deps
     - name: Run Playwright tests
       run: npx playwright test
+    - name: Send test report email
+      if: always()
+      uses: dawidd6/action-send-mail@v3
+      with:
+        server_address: smtp.example.com
+        server_port: 587
+        username: ${{ secrets.SMTP_USERNAME }}
+        password: ${{ secrets.SMTP_PASSWORD }}
+        subject: Playwright test report for ${{ github.repository }}
+        to: jhoselinesalazarorozco@gmail.com
+        from: GitHub Actions <${{ secrets.EMAIL_FROM }}>
+        body: |
+          Playwright test run completed for repository ${{ github.repository }}.
+          Result: ${{ job.status }}
+          Workflow: ${{ github.workflow }}
+          Run URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        secure: false
     - uses: actions/upload-artifact@v4
       if: ${{ !cancelled() }}
       with:
