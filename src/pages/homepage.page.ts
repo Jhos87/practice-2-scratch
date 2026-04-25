@@ -10,6 +10,7 @@ export class Homepage extends BasePage {
   }
 
     async clickOnProduct() {
+        await expect(this.productLocator).toBeVisible();
         await this.productLocator.click();
     }
 

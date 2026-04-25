@@ -7,9 +7,10 @@ export class BasePage {
     this.page = page;
   }
 
-    async goto() 
+    async goto(url: string) 
     {
-        await this.page.goto('');
+        await this.page.goto(url);
+        await expect(this.page).toHaveURL(url);
     }
 
     async verifyTitle()    

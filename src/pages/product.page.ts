@@ -12,6 +12,7 @@ export class Product extends BasePage {
 
     async addToCart() 
     {
+        await expect(this.addToCartButton).toBeVisible();
         await this.addToCartButton.click();
     }
 
