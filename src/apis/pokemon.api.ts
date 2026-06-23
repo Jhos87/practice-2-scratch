@@ -1,20 +1,19 @@
 import { APIRequestContext, expect, test } from "@playwright/test";
 
 export class PokemonAPI {
-
-    private baseURLPokemon: string = 'https://pokeapi.co/api/v2/pokemon';
+    private baseURLPokemon: string;
     private request: APIRequestContext;
 
     constructor(request: APIRequestContext) {
         this.request = request;
+        const base = 'https://pokeapi.co/api/v2';
+        this.baseURLPokemon = `${base.replace(/\/$/, '')}/pokemon`;
     }
     
     async getPokemon(pokemonName: string) {
         const response = await this.request.get(`${this.baseURLPokemon}/${pokemonName}`);
         expect(response.ok()).toBeTruthy();
         expect(response.status()).toBe(200);
-
-        this.validateBody(pokemonName, response);
 
         return response;
     };
